@@ -20,10 +20,10 @@
         </div>
     </div>
 
-
+    <!-- socket.io lib -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     
-    <!--Video stream service-->
+    <!--Video/data stream service-->
     <script>
         var socket = io('{{address}}');
 
@@ -65,7 +65,7 @@
             var frame = capture(video_element)
             var data = frame.toDataURL(type);
             socket.emit('image', data);
-        }, 500);
+        }, 1000);
 
         var label_to_text = {
             0: "Angry",
@@ -86,4 +86,25 @@
         //     image_id.src = image;
         // });
     </script>
+
+    <!-- Check for the device type -->
+    <script>
+        const deviceType = () => {
+            const ua = navigator.userAgent;
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                alert("Please open this website on a desktop/laptop, not a tablet")
+                return "tablet";
+            }
+            else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+                alert("Please open this website on a desktop/laptop, not a phone")
+                return "mobile";
+            }
+            return "desktop";
+        };
+        deviceType();
+    </script>
+
 </body>
+<footer>
+    <h3>Made by Nojus Kybartas</h3>
+</footer>

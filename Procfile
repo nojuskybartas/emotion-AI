@@ -1,1 +1,1 @@
-web: gunicorn run:ai_app
+web: gunicorn app:ai_app
