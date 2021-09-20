@@ -49,7 +49,7 @@
     
     <!--Video stream service-->
     <script>
-        var socket = io('http://localhost:5000');
+        var socket = io('{{address}}');
 
         socket.on('connect', function(){
             console.log("Connected...!", socket.connected)

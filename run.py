@@ -1,11 +1,10 @@
 from collections import defaultdict
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 from app.main import scan_frame
 from flask_socketio import SocketIO, emit
 import base64
 import cv2
 import numpy as np
-
 
 ai_app = Flask(__name__)
 socketio = SocketIO(ai_app)
@@ -46,7 +45,7 @@ def send_emotion():
 
 @ai_app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', address=request.host)
 
 @ai_app.route('/emotion')
 def emotion():
