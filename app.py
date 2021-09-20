@@ -2,9 +2,12 @@ from collections import defaultdict
 from flask import Flask, render_template, request
 from model import scan_frame, label_to_text
 from flask_socketio import SocketIO, emit
+from engineio.payload import Payload
 import base64
 import cv2
 import numpy as np
+
+Payload.max_decode_packets = 50
 
 ai_app = Flask(__name__)
 socketio = SocketIO(ai_app)
@@ -21,13 +24,14 @@ def image(data_image):
 
     headers, image = data_image.split(',', 1) 
 
-    frame_array = bytes_to_array(base64.b64decode(image))
-    frame = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
+    if data_image is not None:
+        frame_array = bytes_to_array(base64.b64decode(image))
+        frame = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
 
-    emotionDict = scan_frame(frame)
+        emotionDict = scan_frame(frame)
 
-    if emotionDict is not None:
-        emit('emotionDict', dict(emotionDict))
+        if emotionDict is not None:
+            emit('emotionDict', dict(emotionDict))
 
 @ai_app.route('/')
 def index():
