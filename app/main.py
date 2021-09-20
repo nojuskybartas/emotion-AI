@@ -1,19 +1,14 @@
 from collections import defaultdict
-from flask import Flask, render_template, Response, jsonify
 import cv2
 import numpy as np
-import tensorflow.keras as keras
-from threading import Thread
+import tensorflow as tf
 from time import sleep
-
-
-app = Flask(__name__)
 
 with open('app/model/emotion.json', 'r') as json_file:
     json_savedModel = json_file.read()
 
 # load the emotion detector model's architecture
-emotionDetModel = keras.models.model_from_json(json_savedModel)
+emotionDetModel = tf.keras.models.model_from_json(json_savedModel)
 emotionDetModel.load_weights('app/model/weights_emotions.hdf5')
 emotionDetModel.compile(optimizer="Adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
