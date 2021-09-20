@@ -1,0 +1,46 @@
+<head>
+    <link rel="stylesheet" href="static/assets/style.css">
+    <title>Emotion AI</title>
+</head>
+<body>
+
+    <script>
+        var emotion_manager = new EventSource("/emotion");
+        emotion_manager.onmessage = function(event) {
+            data = event.data.split("&&&");
+            face_id = data[0];
+            angry = data[1];
+            disgusted = data[2];
+            sad = data[3];
+            happy = data[4];
+            surprised = data[5];
+            
+            document.getElementById("angry").textContent= "Angry: " + angry;
+            document.getElementById("disgusted").textContent="Disgusted: " + disgusted;
+            document.getElementById("sad").textContent="Sad: " + sad;
+            document.getElementById("happy").textContent="Happy: " + happy;
+            document.getElementById("surprised").textContent="Surprised: " + surprised;
+        }
+    </script>
+
+
+    <div class="streamContainer">
+        <h1>Live Streaming</h1>
+        <div class="feeds">
+            <div class="cameraFeed">
+                <img src="{{ url_for('video_feed') }}">
+            </div>
+            <div class="outputFeed">
+                <h2>Emotion: </h2>
+                <div class="emotionList">
+                    <h2 id=angry></h2>
+                    <h2 id=disgusted></h2>
+                    <h2 id=sad></h2>
+                    <h2 id=happy></h2>
+                    <h2 id=surprised></h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>

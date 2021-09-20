@@ -1,0 +1,50 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+body{
+    background-color: #412e43;
+    background-size: 100%;
+}
+
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2em;
+    font-weight: 400;
+    line-height: 1.7em;
+    color: #999;
+    padding: 10px;
+    box-shadow: 0px 0px 8px 5px rgb(0, 0, 0);
+}
+
+h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5em;
+    font-weight: 300;
+    line-height: 1.5em;
+    color: #999;
+    padding: 10px;
+}
+
+.streamContainer {
+    margin-top: 20vh;
+    margin-left: 20vw;
+    margin-right: 20vw;
+}
+
+.feeds {
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.cameraFeed {
+    box-shadow: 0px 0px 8px 5px rgb(0, 0, 0);
+}
+
+.outputFeed {
+    margin-left: 15px;
+    inline-size: 15vw;
+    overflow-wrap: break-word;
+    box-shadow: 0px 0px 8px 5px rgb(0, 0, 0);
+
+}
