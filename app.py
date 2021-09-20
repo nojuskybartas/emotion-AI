@@ -31,11 +31,11 @@ def image(data_image):
         emotionDict = scan_frame(frame)
 
         if emotionDict is not None:
-            emit('emotionDict', dict(emotionDict))
+            emit('emotionDict', {'values': dict(emotionDict), 'max': max(emotionDict.values())})
 
 @ai_app.route('/')
 def index():
     return render_template('index.html', address=request.host, numEmotions=5, label_to_text=label_to_text)
 
 if __name__=="__main__":
-    socketio.run(ai_app)
+    socketio.run(ai_app, debug=True)

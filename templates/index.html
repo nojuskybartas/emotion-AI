@@ -10,7 +10,7 @@
                 <video autoplay="true" id="videoElement"></video>
             </div>
             <div class="outputFeed">
-                <h2>Emotion: </h2>
+                <h2 style="font-weight: 400;">Emotion: </h2>
                 <div class="emotionList">
                     {% for i in range(numEmotions) %}
                         <h2 id="emotion_{{i}}"></h2>
@@ -29,6 +29,10 @@
 
         socket.on('connect', function(){
             console.log("Connected...!", socket.connected)
+        });
+
+        socket.on("disconnect", () => {
+            socket.connect()
         });
 
         const video = document.querySelector("#videoElement");
@@ -65,7 +69,7 @@
             var frame = capture(video_element)
             var data = frame.toDataURL(type);
             socket.emit('image', data);
-        }, 1000);
+        }, 100);
 
         var label_to_text = {
             0: "Angry",
@@ -76,8 +80,14 @@
         };
 
         socket.on('emotionDict', function(data){
-            for (const [key, value] of Object.entries(data)) {
-                document.getElementById(`emotion_${key}`).textContent= label_to_text[key] + ": " + value;
+            for (const [key, value] of Object.entries(data.values)) {
+                em_selector = document.getElementById(`emotion_${key}`);
+                em_selector.textContent= label_to_text[key] + ": " + value;
+                if (data.max == value) {
+                    em_selector.style.fontWeight = "800"
+                } else {
+                    em_selector.style.fontWeight = "300"
+                }
             }
         });
 
