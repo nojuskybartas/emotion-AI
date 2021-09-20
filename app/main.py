@@ -89,7 +89,4 @@ def video_feed():
 def emotion():
     return Response(det_emotion(), mimetype='text/event-stream')
 
-if __name__=="__main__":
-    detector = Thread(target=det_emotion)
-    detector.start()
-    app.run()
+
