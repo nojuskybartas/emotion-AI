@@ -3,42 +3,18 @@
     <title>Emotion AI</title>
 </head>
 <body>
-
-    <script>
-        var emotion_manager = new EventSource("/emotion");
-        emotion_manager.onmessage = function(event) {
-            data = event.data.split("&&&");
-            face_id = data[0];
-            angry = data[1];
-            disgusted = data[2];
-            sad = data[3];
-            happy = data[4];
-            surprised = data[5];
-            
-            document.getElementById("angry").textContent= "Angry: " + angry;
-            document.getElementById("disgusted").textContent="Disgusted: " + disgusted;
-            document.getElementById("sad").textContent="Sad: " + sad;
-            document.getElementById("happy").textContent="Happy: " + happy;
-            document.getElementById("surprised").textContent="Surprised: " + surprised;
-        }
-    </script>
-
-
     <div class="streamContainer">
         <h1>Live Streaming</h1>
         <div class="feeds">
-            <div class="cameraFeed">
-                <canvas id="canvasOutput"></canvas>
+            <div class="cameraFeed" id="cameraFeed">
                 <video autoplay="true" id="videoElement"></video>
             </div>
             <div class="outputFeed">
                 <h2>Emotion: </h2>
                 <div class="emotionList">
-                    <h2 id=angry></h2>
-                    <h2 id=disgusted></h2>
-                    <h2 id=sad></h2>
-                    <h2 id=happy></h2>
-                    <h2 id=surprised></h2>
+                    {% for i in range(numEmotions) %}
+                        <h2 id="emotion_{{i}}"></h2>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -56,10 +32,6 @@
         });
 
         const video = document.querySelector("#videoElement");
-
-        let videoBox = document.querySelector('.cameraFeed');
-        video.width = videoBox.offsetWidth; 
-        video.height = videoBox.offsetHeight; 
 
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -90,11 +62,24 @@
         setInterval(() => {
             var type = "image/png"
             var video_element = document.getElementById("videoElement")
-            var frame = capture(video_element, 1)
+            var frame = capture(video_element)
             var data = frame.toDataURL(type);
             socket.emit('image', data);
         }, 500);
 
+        var label_to_text = {
+            0: "Angry",
+            1: "Disgusted",
+            2: "Sad",
+            3: "Happy",
+            4: "Surprised"
+        };
+
+        socket.on('emotionDict', function(data){
+            for (const [key, value] of Object.entries(data)) {
+                document.getElementById(`emotion_${key}`).textContent= label_to_text[key] + ": " + value;
+            }
+        });
 
         // socket.on('response_back', function(image){
         //     const image_id = document.getElementById('image');

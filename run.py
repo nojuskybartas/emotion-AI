@@ -13,6 +13,7 @@ def bytes_to_array(bytes):
     return cv2.cvtColor(cv2.imdecode(np.frombuffer(bytes, np.uint8), -1), cv2.COLOR_BGR2RGB)
 
 emotionDict = defaultdict(int)
+label_to_text = {0:'angry', 1:'disgusted', 2:'sad', 3:'happy', 4: 'surprised'}
 
 @socketio.on('image')
 def image(data_image):
@@ -25,6 +26,9 @@ def image(data_image):
     frame = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
 
     emotionDict = scan_frame(frame)
+
+    if emotionDict is not None:
+        emit('emotionDict', dict(emotionDict))
     
     # TODO: future implementation of facial key point model
     
@@ -45,7 +49,7 @@ def send_emotion():
 
 @ai_app.route('/')
 def index():
-    return render_template('index.html', address=request.host)
+    return render_template('index.html', address=request.host, numEmotions=5, label_to_text=label_to_text)
 
 @ai_app.route('/emotion')
 def emotion():
