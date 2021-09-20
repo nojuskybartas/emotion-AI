@@ -10,7 +10,7 @@
                 <video autoplay="true" id="videoElement"></video>
             </div>
             <div class="outputFeed">
-                <h2 style="font-weight: 400;">Emotion: </h2>
+                <h2 style="font-weight: 500;">Emotion: </h2>
                 <div class="emotionList">
                     {% for i in range(numEmotions) %}
                         <h2 id="emotion_{{i}}"></h2>
@@ -29,10 +29,6 @@
 
         socket.on('connect', function(){
             console.log("Connected...!", socket.connected)
-        });
-
-        socket.on("disconnect", () => {
-            socket.connect()
         });
 
         const video = document.querySelector("#videoElement");
@@ -86,7 +82,7 @@
                 if (data.max == value) {
                     em_selector.style.fontWeight = "800"
                 } else {
-                    em_selector.style.fontWeight = "300"
+                    em_selector.style.fontWeight = "200"
                 }
             }
         });
