@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 from time import sleep
 
+
 with open('app/model/emotion.json', 'r') as json_file:
     json_savedModel = json_file.read()
 
@@ -46,31 +47,25 @@ def gen_frames():
 def det_emotion():
     while True:
         if lastReadFrame is not None:
-            gray_frame = cv2.cvtColor(lastReadFrame, cv2.COLOR_BGR2GRAY)
-            face_coordinates = trained_face_data.detectMultiScale(gray_frame, minNeighbors=6, minSize=(100, 100))
-            for idx, (x, y, w, h) in enumerate(face_coordinates):
-                face = lastReadFrame[y:y + h, x:x + w]
-                face = np.asarray(face).astype('float32')
-                face = cv2.resize(face, dsize=(96, 96), interpolation=cv2.INTER_CUBIC)
-                face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
-                face = np.stack(face, axis=0)
-                face = face.reshape(1, 96, 96, 1)
-                face = face / 255
-
-                #print(emotionDetModel.predict(face))
-
-                emotion_prediction = emotionDetModel.predict(face)
-                emotionList = (prediction_to_text(emotion_prediction))
-                
-                # df_emotion = np.argmax(emotion_prediction, axis=-1)
-                
-                # df_emotion = np.expand_dims(df_emotion, axis=1)
-                # emotion = label_to_text[df_emotion[0][0]]
-                # print(df_emotion)
-
-                yield "data: " + str(idx) + "&&&" + str(emotionList[0])  + "&&&" + str(emotionList[1]) + "&&&" + str(emotionList[2]) + "&&&" + str(emotionList[3]) + "&&&" + str(emotionList[4]) + "\n\n"
-        
+            emotionList = scan_frame(lastReadFrame)
+            yield "data: " + str(0) + "&&&" + str(emotionList[0])  + "&&&" + str(emotionList[1]) + "&&&" + str(emotionList[2]) + "&&&" + str(emotionList[3]) + "&&&" + str(emotionList[4]) + "\n\n"
         sleep(0.5)
+
+def scan_frame(frame):
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    face_coordinates = trained_face_data.detectMultiScale(gray_frame, minNeighbors=6, minSize=(100, 100))
+    for (x, y, w, h) in face_coordinates:
+        face = frame[y:y + h, x:x + w]
+        face = np.asarray(face).astype('float32')
+        face = cv2.resize(face, dsize=(96, 96), interpolation=cv2.INTER_CUBIC)
+        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+        face = np.stack(face, axis=0)
+        face = face.reshape(1, 96, 96, 1)
+        face = face / 255
+        
+        return prediction_to_text(emotionDetModel.predict(face))
+
+
 
 
 
